@@ -1,0 +1,52 @@
+﻿@page
+@model IndexModel
+@using System.Configuration;
+@using System.Data.SqlClient;
+@using WebMatrix.Data
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+@{
+    var connectionstring = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["RazorPagesDBContext"];
+    try
+    {
+        using (var db= WebMatrix.Data.Database.OpenConnectionString(connectionstring))
+        {
+            var result = db.Query("SELECT TOP (10) FirstName,LastName,CompanyName,Phone FROM [SalesLT].[Customer]");
+            <table border="2">
+                <th>First Name</th>
+                <th>Last Name Name</th>
+                <th>CompanyName</th>
+                <th>Phone</th>
+                @foreach (var item in result)
+                {
+                    <tr>
+                        <td>
+                            @item.FirstName
+                        </td>
+                        <td>
+                            @item.LastName
+                        </td>
+                        <td>
+                            @item.CompanyName
+                        </td>
+                        <td>
+                            @item.Phone
+                        </td>
+                    </tr>
+                }
+            </table>
+
+        }
+    }
+    catch(Exception ex)
+    {
+        throw ex;
+    }
+}
+</div>
